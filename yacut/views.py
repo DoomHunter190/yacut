@@ -2,7 +2,7 @@ from http import HTTPStatus
 
 from flask import abort, flash, redirect, render_template, url_for
 
-from . import app
+from . import app, db
 from .error_handlers import GenerationError
 from .forms import URLForm
 from .models import URLMap
@@ -24,6 +24,8 @@ def index_view():
         return render_template('index.html', form=form)
     try:
         url_map = URLMap.create_url_map(original, short)
+        db.session.add(url_map)
+        db.session.commit()
     except GenerationError:
         abort(HTTPStatus.INTERNAL_SERVER_ERROR)
     return render_template(

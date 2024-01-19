@@ -51,8 +51,6 @@ class URLMap(db.Model):
         if not short:
             short = URLMap.get_unique_short_id()
         url_map = URLMap(original=original, short=short)
-        db.session.add(url_map)
-        db.session.commit()
         return url_map
 
     @staticmethod
