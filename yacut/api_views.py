@@ -1,3 +1,5 @@
+from http import HTTPStatus
+
 from flask import jsonify, request, url_for
 
 from . import app
@@ -9,11 +11,11 @@ from .models import URLMap
 def get_url(short_id):
     url_map = URLMap.get_url_map(short_id)
     if url_map is None:
-        raise InvalidAPIUsage('Указанный id не найден', 404)
+        raise InvalidAPIUsage('Указанный id не найден', HTTPStatus.NOT_FOUND)
     if not URLMap.short_id_is_correct(short_id):
         raise InvalidAPIUsage(
             'Указано недопустимое имя для короткой ссылки')
-    return jsonify({'url': url_map.original}), 200
+    return jsonify({'url': url_map.original}), HTTPStatus.OK
 
 
 @app.route('/api/id/', methods=['POST'])
@@ -44,4 +46,4 @@ def create_id():
     return jsonify({
         'url': url_map.original,
         'short_link': url_for('index_view', _external=True) + url_map.short
-    }), 201
+    }), HTTPStatus.CREATED
