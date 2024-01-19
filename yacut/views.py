@@ -1,3 +1,5 @@
+from http import HTTPStatus
+
 from flask import abort, flash, redirect, render_template, url_for
 
 from . import app
@@ -23,7 +25,7 @@ def index_view():
     try:
         url_map = URLMap.create_url_map(original, short)
     except GenerationError:
-        abort(500)
+        abort(HTTPStatus.INTERNAL_SERVER_ERROR)
     return render_template(
         'index.html',
         form=form,
@@ -36,4 +38,4 @@ def redirect_view(short_id):
     url_map = URLMap.get_url_map(short_id)
     if url_map:
         return redirect(url_map.original)
-    abort(404)
+    abort(HTTPStatus.NOT_FOUND)
