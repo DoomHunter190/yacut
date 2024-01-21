@@ -2,7 +2,7 @@ from http import HTTPStatus
 
 from flask import jsonify, request, url_for
 
-from . import app
+from . import app, db
 from .error_handlers import GenerationError, InvalidAPIUsage
 from .models import URLMap
 
@@ -41,6 +41,8 @@ def create_id():
                 'Предложенный вариант короткой ссылки уже существует.')
     try:
         url_map = URLMap.create_url_map(original, short)
+        db.session.add(url_map)
+        db.session.commit()
     except GenerationError as error:
         return error.to_dict(), error.status_code
     return jsonify({

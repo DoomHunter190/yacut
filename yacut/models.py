@@ -51,6 +51,7 @@ class URLMap(db.Model):
         if not short:
             short = URLMap.get_unique_short_id()
         url_map = URLMap(original=original, short=short)
+
         return url_map
 
     @staticmethod
